@@ -1,64 +1,73 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import Sidebar from '@/components/Sidebar';
-import TopicContent from '@/components/TopicContent';
-import DayPlanView from '@/components/DayPlanView';
-import HomeView from '@/components/HomeView';
-import ExercisePage from '@/components/ExercisePage';
-import { TOPICS, DAY_PLANS } from '@/data/topics';
-import { Home, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useState, useEffect } from "react";
+import Sidebar from "@/components/Sidebar";
+import TopicContent from "@/components/TopicContent";
+import DayPlanView from "@/components/DayPlanView";
+import HomeView from "@/components/HomeView";
+import ExercisePage from "@/components/ExercisePage";
+import { TOPICS, DAY_PLANS } from "@/data/topics";
+import { Home, ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function Page() {
-  const [activeId, setActiveId] = useState<string>('home');
+  const [activeId, setActiveId] = useState<string>("home");
   const [visited, setVisited] = useState<Set<string>>(new Set());
 
   // Flat list of all navigable IDs in order
   const allIds = [
-    'home',
-    'day-plan-1',
-    'exercises-day-1',
-    ...TOPICS.filter(t => t.day === 1).map(t => t.id),
-    'day-plan-2',
-    'exercises-day-2',
-    ...TOPICS.filter(t => t.day === 2).map(t => t.id),
-    'day-plan-3',
-    'exercises-day-3',
-    ...TOPICS.filter(t => t.day === 3).map(t => t.id),
+    "home",
+    "day-plan-1",
+    "exercises-day-1",
+    ...TOPICS.filter((t) => t.day === 1).map((t) => t.id),
+    "day-plan-2",
+    "exercises-day-2",
+    ...TOPICS.filter((t) => t.day === 2).map((t) => t.id),
+    "day-plan-3",
+    "exercises-day-3",
+    ...TOPICS.filter((t) => t.day === 3).map((t) => t.id),
   ];
 
   const currentIndex = allIds.indexOf(activeId);
   const prevId = currentIndex > 0 ? allIds[currentIndex - 1] : null;
-  const nextId = currentIndex < allIds.length - 1 ? allIds[currentIndex + 1] : null;
+  const nextId =
+    currentIndex < allIds.length - 1 ? allIds[currentIndex + 1] : null;
 
   const handleSelect = (id: string) => {
     setActiveId(id);
-    setVisited(prev => new Set([...prev, id]));
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setVisited((prev) => {
+      const updated = new Set(prev);
+      updated.add(id);
+      return updated;
+    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   // Mark as visited on load
   useEffect(() => {
-    if (activeId !== 'home' && !activeId.startsWith('day-plan')) {
-      setVisited(prev => new Set([...prev, activeId]));
+    if (activeId !== "home" && !activeId.startsWith("day-plan")) {
+      setVisited((prev) => {
+        const updated = new Set(prev);
+        updated.add(activeId);
+        return updated;
+      });
     }
   }, [activeId]);
 
   // Keyboard navigation
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.altKey && e.key === 'ArrowRight' && nextId) handleSelect(nextId);
-      if (e.altKey && e.key === 'ArrowLeft' && prevId) handleSelect(prevId);
+      if (e.altKey && e.key === "ArrowRight" && nextId) handleSelect(nextId);
+      if (e.altKey && e.key === "ArrowLeft" && prevId) handleSelect(prevId);
     };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
   }, [nextId, prevId]);
 
   const getLabel = (id: string) => {
-    if (id === 'home') return 'Home';
-    if (id.startsWith('day-plan-')) return `Day ${id.slice(-1)} Overview`;
-    if (id.startsWith('exercises-day-')) return `Day ${id.slice(-1)} Exercises`;
-    return TOPICS.find(t => t.id === id)?.title || id;
+    if (id === "home") return "Home";
+    if (id.startsWith("day-plan-")) return `Day ${id.slice(-1)} Overview`;
+    if (id.startsWith("exercises-day-")) return `Day ${id.slice(-1)} Exercises`;
+    return TOPICS.find((t) => t.id === id)?.title || id;
   };
 
   return (
@@ -77,15 +86,17 @@ export default function Page() {
             {/* Breadcrumb */}
             <div className="flex items-center gap-2 text-xs text-slate-500">
               <button
-                onClick={() => handleSelect('home')}
+                onClick={() => handleSelect("home")}
                 className="hover:text-slate-300 transition-colors"
               >
                 <Home size={13} />
               </button>
-              {activeId !== 'home' && (
+              {activeId !== "home" && (
                 <>
                   <span>/</span>
-                  <span className="text-slate-400 truncate max-w-[200px]">{getLabel(activeId)}</span>
+                  <span className="text-slate-400 truncate max-w-[200px]">
+                    {getLabel(activeId)}
+                  </span>
                 </>
               )}
             </div>
@@ -116,29 +127,36 @@ export default function Page() {
 
         {/* Page content */}
         <div className="flex-1 px-6 py-10 lg:px-10">
-          {activeId === 'home' && (
-            <HomeView onStart={handleSelect} />
-          )}
+          {activeId === "home" && <HomeView onStart={handleSelect} />}
 
-          {activeId.startsWith('day-plan-') && (() => {
-            const dayNum = parseInt(activeId.slice(-1)) as 1 | 2 | 3;
-            const plan = DAY_PLANS.find(p => p.day === dayNum);
-            return plan ? <DayPlanView plan={plan} onTopicSelect={handleSelect} /> : null;
-          })()}
+          {activeId.startsWith("day-plan-") &&
+            (() => {
+              const dayNum = parseInt(activeId.slice(-1)) as 1 | 2 | 3;
+              const plan = DAY_PLANS.find((p) => p.day === dayNum);
+              return plan ? (
+                <DayPlanView plan={plan} onTopicSelect={handleSelect} />
+              ) : null;
+            })()}
 
-          {activeId.startsWith('exercises-day-') && (() => {
-            const dayNum = parseInt(activeId.slice(-1)) as 1 | 2 | 3;
-            return <ExercisePage day={dayNum} />;
-          })()}
+          {activeId.startsWith("exercises-day-") &&
+            (() => {
+              const dayNum = parseInt(activeId.slice(-1)) as 1 | 2 | 3;
+              return <ExercisePage day={dayNum} />;
+            })()}
 
-          {!activeId.startsWith('day-plan-') && !activeId.startsWith('exercises-day-') && activeId !== 'home' && (() => {
-            const topic = TOPICS.find(t => t.id === activeId);
-            return topic ? <TopicContent topic={topic} onNavigate={handleSelect} /> : null;
-          })()}
+          {!activeId.startsWith("day-plan-") &&
+            !activeId.startsWith("exercises-day-") &&
+            activeId !== "home" &&
+            (() => {
+              const topic = TOPICS.find((t) => t.id === activeId);
+              return topic ? (
+                <TopicContent topic={topic} onNavigate={handleSelect} />
+              ) : null;
+            })()}
         </div>
 
         {/* Bottom navigation */}
-        {activeId !== 'home' && (
+        {activeId !== "home" && (
           <footer className="border-t border-white/5 px-6 py-5">
             <div className="max-w-3xl mx-auto flex items-center justify-between gap-4">
               {prevId ? (
@@ -146,13 +164,22 @@ export default function Page() {
                   onClick={() => handleSelect(prevId)}
                   className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors group"
                 >
-                  <ChevronLeft size={16} className="group-hover:-translate-x-0.5 transition-transform" />
+                  <ChevronLeft
+                    size={16}
+                    className="group-hover:-translate-x-0.5 transition-transform"
+                  />
                   <div className="text-left">
-                    <div className="text-[10px] text-slate-600 uppercase tracking-wider">Previous</div>
-                    <div className="truncate max-w-[180px]">{getLabel(prevId)}</div>
+                    <div className="text-[10px] text-slate-600 uppercase tracking-wider">
+                      Previous
+                    </div>
+                    <div className="truncate max-w-[180px]">
+                      {getLabel(prevId)}
+                    </div>
                   </div>
                 </button>
-              ) : <div />}
+              ) : (
+                <div />
+              )}
 
               {nextId && (
                 <button
@@ -160,10 +187,17 @@ export default function Page() {
                   className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors group text-right"
                 >
                   <div>
-                    <div className="text-[10px] text-slate-600 uppercase tracking-wider">Next</div>
-                    <div className="truncate max-w-[180px]">{getLabel(nextId)}</div>
+                    <div className="text-[10px] text-slate-600 uppercase tracking-wider">
+                      Next
+                    </div>
+                    <div className="truncate max-w-[180px]">
+                      {getLabel(nextId)}
+                    </div>
                   </div>
-                  <ChevronRight size={16} className="group-hover:translate-x-0.5 transition-transform" />
+                  <ChevronRight
+                    size={16}
+                    className="group-hover:translate-x-0.5 transition-transform"
+                  />
                 </button>
               )}
             </div>
