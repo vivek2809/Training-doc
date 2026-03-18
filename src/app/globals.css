@@ -1,0 +1,127 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
+
+:root {
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background: #0a0e1a;
+  color: #e2e8f0;
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #111827; }
+::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #4b5563; }
+
+/* Code blocks */
+.code-block {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+/* Content prose */
+.content-area h2 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.content-area h3 {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin-top: 1.8rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Sidebar active glow */
+.nav-active {
+  background: linear-gradient(90deg, rgba(14, 165, 233, 0.15), transparent);
+  border-left: 2px solid #0ea5e9;
+}
+
+/* Syntax highlight tokens */
+.token-keyword { color: #c792ea; }
+.token-string  { color: #c3e88d; }
+.token-comment { color: #546e7a; font-style: italic; }
+.token-number  { color: #f78c6c; }
+.token-function{ color: #82aaff; }
+.token-class   { color: #ffcb6b; }
+.token-decorator { color: #89ddff; }
+.token-operator { color: #89ddff; }
+.token-punctuation { color: #89ddff; }
+
+/* Smooth transitions */
+.sidebar-link {
+  transition: all 0.15s ease;
+}
+
+/* Day badge */
+.day-badge {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Progress bar animation */
+@keyframes progressFill {
+  from { width: 0%; }
+  to { width: var(--progress-width); }
+}
+
+.progress-fill {
+  animation: progressFill 0.8s ease-out forwards;
+}
+
+/* Highlight boxes */
+.tip-box, .important-box, .analogy-box {
+  position: relative;
+  border-radius: 8px;
+  padding: 1rem 1rem 1rem 3rem;
+}
+
+.tip-box::before {
+  content: '💡';
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+  font-size: 1rem;
+}
+
+.important-box::before {
+  content: '⚠️';
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+  font-size: 1rem;
+}
+
+.analogy-box::before {
+  content: attr(data-emoji);
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+}
