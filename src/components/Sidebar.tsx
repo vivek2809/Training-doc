@@ -103,6 +103,22 @@ export default function Sidebar({ activeTopicId, onTopicSelect, visitedTopics }:
               </button>
             ))}
           </div>
+          {/* Projects quick-jump button */}
+          <div className="flex gap-1 mt-1.5">
+            <button
+              onClick={() => onTopicSelect("projects")}
+              className={`flex-1 py-1.5 rounded text-[10px] font-medium border transition-all flex items-center justify-center gap-1.5 ${
+                activeTopicId === "projects"
+                  ? 'text-sky-300 border-sky-400/30 bg-sky-400/10 font-semibold'
+                  : 'text-slate-500 border-white/5 hover:border-white/10 hover:text-slate-300'
+              }`}
+              style={{ fontFamily: 'var(--font-mono)' }}
+              title={`Practice Projects`}
+            >
+              <span>🚀</span>
+              <span>Projects – NestJS Practice</span>
+            </button>
+          </div>
         </div>
 
         <div className="h-px bg-white/5 mx-2 mb-3" />

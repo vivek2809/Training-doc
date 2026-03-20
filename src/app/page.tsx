@@ -6,6 +6,7 @@ import TopicContent from "@/components/TopicContent";
 import DayPlanView from "@/components/DayPlanView";
 import HomeView from "@/components/HomeView";
 import ExercisePage from "@/components/ExercisePage";
+import ProjectsView from "@/components/ProjectsView";
 import { TOPICS, DAY_PLANS } from "@/data/topics";
 import { Home, ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -25,6 +26,7 @@ export default function Page() {
     "day-plan-3",
     "exercises-day-3",
     ...TOPICS.filter((t) => t.day === 3).map((t) => t.id),
+    "projects",
   ];
 
   const currentIndex = allIds.indexOf(activeId);
@@ -65,6 +67,7 @@ export default function Page() {
 
   const getLabel = (id: string) => {
     if (id === "home") return "Home";
+    if (id === "projects") return "Projects – NestJS Practice";
     if (id.startsWith("day-plan-")) return `Day ${id.slice(-1)} Overview`;
     if (id.startsWith("exercises-day-")) return `Day ${id.slice(-1)} Exercises`;
     return TOPICS.find((t) => t.id === id)?.title || id;
@@ -144,9 +147,12 @@ export default function Page() {
               return <ExercisePage day={dayNum} />;
             })()}
 
+          {activeId === "projects" && <ProjectsView />}
+
           {!activeId.startsWith("day-plan-") &&
             !activeId.startsWith("exercises-day-") &&
             activeId !== "home" &&
+            activeId !== "projects" &&
             (() => {
               const topic = TOPICS.find((t) => t.id === activeId);
               return topic ? (
